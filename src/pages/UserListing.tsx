@@ -73,27 +73,27 @@ const UserListing: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="mb-12">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 bg-sky-100 rounded-xl">
-              <Users size={28} className="text-sky-600" />
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-50 to-gray-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="mb-16">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="p-4 bg-sky-100 rounded-2xl">
+              <Users size={32} className="text-sky-600" />
             </div>
             <div>
-              <h1 className="text-4xl sm:text-5xl font-bold text-gray-900">Users Directory</h1>
-              <p className="text-gray-600 mt-1">Discover and explore professional profiles</p>
+              <h1 className="text-5xl sm:text-6xl font-bold text-gray-900">Users Directory</h1>
+              <p className="text-gray-600 mt-2 text-lg">Discover and explore professional profiles</p>
             </div>
           </div>
         </div>
 
-        <div className="card p-8 mb-10 space-y-6">
+        <div className="card p-10 mb-12 space-y-8">
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-3">Search Users</label>
+            <label className="block text-base font-semibold text-gray-800 mb-4">Search Users</label>
             <SearchBar onSearch={handleSearch} />
           </div>
           
-          <div className="border-t border-gray-100 pt-6">
+          <div className="border-t border-gray-200 pt-8">
             <GenderFilter
               selectedGender={selectedGender}
               onFilterChange={handleGenderFilterChange}
@@ -101,33 +101,33 @@ const UserListing: React.FC = () => {
           </div>
 
           {searchQuery && (
-            <div className="mt-4 p-4 bg-sky-50 border border-sky-200 rounded-lg">
-              <p className="text-sm text-sky-800 font-medium">
-                Found <span className="font-bold">{filteredUsers.length}</span> result{filteredUsers.length !== 1 ? 's' : ''} for "<span className="font-semibold">{searchQuery}</span>"
+            <div className="mt-6 p-5 bg-sky-50 border border-sky-300 rounded-xl">
+              <p className="text-sm text-sky-900 font-medium">
+                Found <span className="font-bold text-sky-700">{filteredUsers.length}</span> result{filteredUsers.length !== 1 ? 's' : ''} for "<span className="font-semibold">{searchQuery}</span>"
               </p>
             </div>
           )}
         </div>
 
         {error && (
-          <div className="card border-2 border-red-200 bg-red-50 p-6 mb-8">
-            <p className="text-red-700 font-semibold">Error: {error}</p>
+          <div className="card border-2 border-red-200 bg-red-50 p-8 mb-10">
+            <p className="text-red-700 font-semibold text-lg">Error: {error}</p>
           </div>
         )}
 
         {loading ? (
-          <div className="flex justify-center items-center h-64">
+          <div className="flex justify-center items-center h-80">
             <div className="text-center">
-              <div className="w-12 h-12 border-4 border-sky-200 border-t-sky-600 rounded-full animate-spin mx-auto mb-4"></div>
-              <p className="text-gray-600 font-medium">Loading users...</p>
+              <div className="w-14 h-14 border-4 border-sky-200 border-t-sky-600 rounded-full animate-spin mx-auto mb-6"></div>
+              <p className="text-gray-600 font-medium text-lg">Loading users...</p>
             </div>
           </div>
         ) : paginatedUsers.length > 0 ? (
           <>
-            <div className="mb-4 text-sm text-gray-600">
+            <div className="mb-8 text-base text-gray-700 bg-white rounded-lg p-4">
               Showing <span className="font-semibold text-gray-900">{startIndex + 1}</span> to <span className="font-semibold text-gray-900">{Math.min(endIndex, filteredUsers.length)}</span> of <span className="font-semibold text-gray-900">{filteredUsers.length}</span> users
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
               {paginatedUsers.map((user) => (
                 <UserCard key={user.login.uuid} user={user} />
               ))}
@@ -141,10 +141,10 @@ const UserListing: React.FC = () => {
             )}
           </>
         ) : (
-          <div className="card p-12 text-center">
-            <Users size={48} className="text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-600 text-lg font-medium">No users found</p>
-            <p className="text-gray-500 text-sm mt-1">Try adjusting your search or filters</p>
+          <div className="card p-16 text-center">
+            <Users size={56} className="text-gray-300 mx-auto mb-6" />
+            <p className="text-gray-600 text-xl font-medium mb-3">No users found</p>
+            <p className="text-gray-500 text-base">Try adjusting your search or filters</p>
           </div>
         )}
       </div>
