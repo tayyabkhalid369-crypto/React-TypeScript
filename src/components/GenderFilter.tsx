@@ -10,39 +10,27 @@ const GenderFilter: React.FC<GenderFilterProps> = ({
   onFilterChange,
 }) => {
   return (
-    <div className="flex gap-4 items-center">
-      <span className="font-semibold text-gray-700">Filter by Gender:</span>
-      <div className="flex gap-3">
-        <button
-          onClick={() => onFilterChange(null)}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-            selectedGender === null
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-          }`}
-        >
-          All
-        </button>
-        <button
-          onClick={() => onFilterChange('male')}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-            selectedGender === 'male'
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-          }`}
-        >
-          👨 Male
-        </button>
-        <button
-          onClick={() => onFilterChange('female')}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-            selectedGender === 'female'
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-          }`}
-        >
-          👩 Female
-        </button>
+    <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+      <span className="font-semibold text-dark-700 text-sm">Filter by Gender:</span>
+      <div className="flex gap-2">
+        {[
+          { value: null, label: 'All Users', icon: '👥' },
+          { value: 'male', label: 'Male', icon: '👨' },
+          { value: 'female', label: 'Female', icon: '👩' },
+        ].map((filter) => (
+          <button
+            key={filter.label}
+            onClick={() => onFilterChange(filter.value as string | null)}
+            className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 text-sm ${
+              selectedGender === filter.value
+                ? 'bg-primary-600 text-white shadow-lg shadow-primary-200 scale-105'
+                : 'btn-secondary'
+            }`}
+          >
+            <span className="mr-1">{filter.icon}</span>
+            {filter.label}
+          </button>
+        ))}
       </div>
     </div>
   );

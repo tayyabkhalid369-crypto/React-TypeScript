@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useLocation, Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useLocation, Link } from 'react-router-dom';
 import { User } from '../types/index';
-import { Mail, Phone, Calendar, MapPin, Globe, Key, ArrowLeft } from 'lucide-react';
+import { Mail, Phone, Calendar, MapPin, Globe, Key, ArrowLeft, MapIcon, Copy, Check } from 'lucide-react';
 
 interface LocationState {
   user?: User;
@@ -12,24 +12,30 @@ const flagUrl = (nat: string): string => {
 };
 
 const UserProfile: React.FC = () => {
-  const { uuid } = useParams<{ uuid: string }>();
   const location = useLocation();
   const locationState = location.state as LocationState | undefined;
   const [user] = useState<User | null>(locationState?.user || null);
+  const [copiedUUID, setCopiedUUID] = useState(false);
+
+  const copyToClipboard = (text: string): void => {
+    navigator.clipboard.writeText(text);
+    setCopiedUUID(true);
+    setTimeout(() => setCopiedUUID(false), 2000);
+  };
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
-        <div className="max-w-2xl mx-auto">
+      <div className="min-h-screen">
+        <div className="max-w-2xl mx-auto px-4 py-12">
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 mb-6"
+            className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 mb-6 font-medium"
           >
             <ArrowLeft size={20} />
             Back to Directory
           </Link>
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-            User not found
+          <div className="card border-2 border-red-200 bg-red-50 p-6">
+            <p className="text-red-700 font-semibold">User not found</p>
           </div>
         </div>
       </div>
@@ -37,180 +43,196 @@ const UserProfile: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 mb-6"
+          className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 mb-8 font-medium transition-colors"
         >
           <ArrowLeft size={20} />
           Back to Directory
         </Link>
 
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          <div className="h-32 bg-gradient-to-r from-blue-500 to-blue-600"></div>
+        <div className="card overflow-hidden">
+          <div className="h-48 bg-gradient-to-r from-primary-500 via-primary-600 to-primary-700"></div>
 
-          <div className="relative px-6 pb-6">
-            <div className="flex flex-col md:flex-row md:items-end gap-4 md:gap-6 -mt-16 mb-6">
-              <img
-                src={user.picture.large}
-                alt={`${user.name.first} ${user.name.last}`}
-                className="w-32 h-32 rounded-full border-4 border-white shadow-lg"
-              />
-              <div className="flex-1">
-                <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
-                  {user.name.title} {user.name.first} {user.name.last}
+          <div className="relative px-6 sm:px-8 pb-8">
+            <div className="flex flex-col sm:flex-row sm:items-end gap-6 -mt-20 mb-8">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary-400 to-primary-600 rounded-2xl blur-xl opacity-30"></div>
+                <img
+                  src={user.picture.large}
+                  alt={`${user.name.first} ${user.name.last}`}
+                  className="w-40 h-40 rounded-2xl border-4 border-white shadow-lg relative"
+                />
+              </div>
+              <div className="flex-1 pb-2">
+                <h1 className="text-3xl sm:text-4xl font-bold text-dark-900">
+                  {user.name.first} {user.name.last}
                 </h1>
-                <p className="text-gray-600 text-lg">@{user.login.username}</p>
-                <div className="flex items-center gap-2 mt-2">
-                  <span className="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
-                    {user.gender === 'male' ? '👨 Male' : '👩 Female'} - Age {user.dob.age}
+                <p className="text-primary-600 font-semibold text-lg">@{user.login.username}</p>
+                <div className="flex items-center gap-2 mt-3 flex-wrap">
+                  <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
+                    user.gender === 'male'
+                      ? 'bg-blue-100 text-blue-700'
+                      : 'bg-pink-100 text-pink-700'
+                  }`}>
+                    {user.gender === 'male' ? '👨 Male' : '👩 Female'}
+                  </span>
+                  <span className="inline-block px-3 py-1 bg-dark-100 text-dark-700 rounded-full text-sm font-semibold">
+                    {user.dob.age} years old
                   </span>
                 </div>
               </div>
-              <div className="text-right">
+              <div className="text-right sm:pb-2">
                 <img
                   src={flagUrl(user.nat)}
                   alt={user.nat}
-                  className="w-16 h-10 rounded shadow"
+                  className="w-20 h-12 rounded-lg shadow-md mx-auto sm:mx-0"
                   title={`Country: ${user.location.country}`}
                 />
-                <p className="text-sm text-gray-600 mt-1">{user.nat}</p>
+                <p className="text-sm text-dark-600 mt-2 font-semibold">{user.nat}</p>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8 pt-8 border-t">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10 pt-8 border-t border-dark-100">
               <div>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">Contact Information</h2>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <Mail className="text-blue-600" size={20} />
-                    <div>
-                      <p className="text-sm text-gray-600">Email</p>
-                      <a href={`mailto:${user.email}`} className="text-blue-600 hover:underline">
-                        {user.email}
-                      </a>
-                    </div>
+                <h2 className="text-xl font-bold text-dark-900 mb-6 flex items-center gap-2">
+                  <Mail size={24} className="text-primary-600" />
+                  Contact Information
+                </h2>
+                <div className="space-y-4">
+                  <div className="bg-dark-50 p-4 rounded-xl border border-dark-100">
+                    <p className="text-xs font-semibold text-dark-600 uppercase tracking-wide">Email</p>
+                    <a href={`mailto:${user.email}`} className="text-primary-600 hover:text-primary-700 font-medium break-all mt-1">
+                      {user.email}
+                    </a>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Phone className="text-blue-600" size={20} />
-                    <div>
-                      <p className="text-sm text-gray-600">Phone</p>
-                      <a href={`tel:${user.phone}`} className="text-blue-600 hover:underline">
-                        {user.phone}
-                      </a>
-                    </div>
+                  <div className="bg-dark-50 p-4 rounded-xl border border-dark-100">
+                    <p className="text-xs font-semibold text-dark-600 uppercase tracking-wide">Phone</p>
+                    <a href={`tel:${user.phone}`} className="text-primary-600 hover:text-primary-700 font-medium mt-1">
+                      {user.phone}
+                    </a>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Phone className="text-blue-600" size={20} />
-                    <div>
-                      <p className="text-sm text-gray-600">Cell</p>
-                      <a href={`tel:${user.cell}`} className="text-blue-600 hover:underline">
-                        {user.cell}
-                      </a>
-                    </div>
+                  <div className="bg-dark-50 p-4 rounded-xl border border-dark-100">
+                    <p className="text-xs font-semibold text-dark-600 uppercase tracking-wide">Mobile</p>
+                    <a href={`tel:${user.cell}`} className="text-primary-600 hover:text-primary-700 font-medium mt-1">
+                      {user.cell}
+                    </a>
                   </div>
                 </div>
               </div>
 
               <div>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">Location</h2>
-                <div className="space-y-2">
-                  <div className="flex items-start gap-3">
-                    <MapPin className="text-blue-600 mt-1 flex-shrink-0" size={20} />
-                    <div>
-                      <p className="font-medium text-gray-900">
-                        {user.location.street.number} {user.location.street.name}
-                      </p>
-                      <p className="text-gray-600">
-                        {user.location.city}, {user.location.state}
-                      </p>
-                      <p className="text-gray-600">
-                        {user.location.postcode}, {user.location.country}
-                      </p>
-                    </div>
+                <h2 className="text-xl font-bold text-dark-900 mb-6 flex items-center gap-2">
+                  <MapPin size={24} className="text-primary-600" />
+                  Location Details
+                </h2>
+                <div className="space-y-4">
+                  <div className="bg-dark-50 p-4 rounded-xl border border-dark-100">
+                    <p className="text-xs font-semibold text-dark-600 uppercase tracking-wide">Address</p>
+                    <p className="font-semibold text-dark-900 mt-1">
+                      {user.location.street.number} {user.location.street.name}
+                    </p>
+                    <p className="text-sm text-dark-600">
+                      {user.location.city}, {user.location.state}
+                    </p>
+                    <p className="text-sm text-dark-600">
+                      {user.location.postcode}, {user.location.country}
+                    </p>
                   </div>
-                  <div className="mt-4 pt-4 border-t">
-                    <div className="flex items-center gap-3">
-                      <Globe className="text-blue-600" size={20} />
+                  <div className="bg-primary-50 p-4 rounded-xl border border-primary-200">
+                    <p className="text-xs font-semibold text-primary-700 uppercase tracking-wide">Timezone</p>
+                    <p className="font-semibold text-primary-900 mt-1">{user.location.timezone.description}</p>
+                    <p className="text-sm text-primary-700">{user.location.timezone.offset}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10 pt-8 border-t border-dark-100">
+              <div>
+                <h2 className="text-xl font-bold text-dark-900 mb-6 flex items-center gap-2">
+                  <Calendar size={24} className="text-primary-600" />
+                  Important Dates
+                </h2>
+                <div className="space-y-4">
+                  <div className="bg-dark-50 p-4 rounded-xl border border-dark-100">
+                    <p className="text-xs font-semibold text-dark-600 uppercase tracking-wide">Date of Birth</p>
+                    <p className="font-semibold text-dark-900 mt-1">
+                      {new Date(user.dob.date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })}
+                    </p>
+                  </div>
+                  <div className="bg-dark-50 p-4 rounded-xl border border-dark-100">
+                    <p className="text-xs font-semibold text-dark-600 uppercase tracking-wide">Registered</p>
+                    <p className="font-semibold text-dark-900 mt-1">
+                      {new Date(user.registered.date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })}
+                    </p>
+                    <p className="text-sm text-dark-600 mt-1">{user.registered.age} years ago</p>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h2 className="text-xl font-bold text-dark-900 mb-6 flex items-center gap-2">
+                  <Key size={24} className="text-primary-600" />
+                  Account Information
+                </h2>
+                <div className="space-y-4">
+                  <div className="bg-dark-50 p-4 rounded-xl border border-dark-100">
+                    <p className="text-xs font-semibold text-dark-600 uppercase tracking-wide">Username</p>
+                    <p className="font-mono font-semibold text-dark-900 mt-1 break-all">{user.login.username}</p>
+                  </div>
+                  <div className="bg-dark-50 p-4 rounded-xl border border-dark-100">
+                    <div className="flex items-center justify-between gap-2">
                       <div>
-                        <p className="text-sm text-gray-600">Timezone</p>
-                        <p className="font-medium text-gray-900">{user.location.timezone.description}</p>
-                        <p className="text-sm text-gray-600">{user.location.timezone.offset}</p>
+                        <p className="text-xs font-semibold text-dark-600 uppercase tracking-wide">UUID</p>
+                        <p className="font-mono text-sm text-dark-900 mt-1 break-all">{user.login.uuid.substring(0, 20)}...</p>
                       </div>
+                      <button
+                        onClick={() => copyToClipboard(user.login.uuid)}
+                        className="p-2 hover:bg-dark-100 rounded-lg transition-colors"
+                      >
+                        {copiedUUID ? <Check size={18} className="text-green-600" /> : <Copy size={18} className="text-dark-600" />}
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8 pt-8 border-t">
-              <div>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">Important Dates</h2>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <Calendar className="text-blue-600" size={20} />
-                    <div>
-                      <p className="text-sm text-gray-600">Date of Birth</p>
-                      <p className="font-medium text-gray-900">
-                        {new Date(user.dob.date).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                        })}
-                      </p>
-                    </div>
+            <div className="mt-10 pt-8 border-t border-dark-100">
+              <h2 className="text-xl font-bold text-dark-900 mb-6 flex items-center gap-2">
+                <MapIcon size={24} className="text-primary-600" />
+                Location Map
+              </h2>
+              <div className="bg-primary-50 p-6 rounded-2xl border border-primary-200">
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div>
+                    <p className="text-sm font-semibold text-primary-700 mb-1">Latitude</p>
+                    <p className="font-mono font-semibold text-primary-900">{user.location.coordinates.latitude}</p>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Calendar className="text-blue-600" size={20} />
-                    <div>
-                      <p className="text-sm text-gray-600">Registered</p>
-                      <p className="font-medium text-gray-900">
-                        {new Date(user.registered.date).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                        })}
-                      </p>
-                      <p className="text-sm text-gray-600">{user.registered.age} years ago</p>
-                    </div>
+                  <div>
+                    <p className="text-sm font-semibold text-primary-700 mb-1">Longitude</p>
+                    <p className="font-mono font-semibold text-primary-900">{user.location.coordinates.longitude}</p>
                   </div>
                 </div>
-              </div>
-
-              <div>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">Account Information</h2>
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center gap-3">
-                    <Key className="text-blue-600" size={20} />
-                    <div className="flex-1 break-all">
-                      <p className="text-gray-600">UUID</p>
-                      <p className="font-mono text-gray-900">{user.login.uuid}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 mt-3">
-                    <Key className="text-blue-600" size={20} />
-                    <div className="flex-1">
-                      <p className="text-gray-600">Username</p>
-                      <p className="font-mono text-gray-900">{user.login.username}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-8 pt-8 border-t">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Coordinates</h2>
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <p className="text-sm text-gray-600">Latitude: {user.location.coordinates.latitude}</p>
-                <p className="text-sm text-gray-600">Longitude: {user.location.coordinates.longitude}</p>
                 <a
                   href={`https://www.google.com/maps?q=${user.location.coordinates.latitude},${user.location.coordinates.longitude}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline text-sm mt-2 inline-block"
+                  className="inline-flex items-center gap-2 btn-primary"
                 >
-                  View on Google Maps →
+                  <MapIcon size={18} />
+                  View on Google Maps
                 </a>
               </div>
             </div>
