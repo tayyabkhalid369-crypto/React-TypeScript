@@ -47,22 +47,22 @@ const Pagination: React.FC<PaginationProps> = ({
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="p-2 rounded-lg border border-dark-200 hover:bg-primary-50 hover:border-primary-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200"
+        className="p-2 rounded-lg border border-gray-200 hover:bg-sky-50 hover:border-sky-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200"
       >
-        <ChevronLeft size={20} className="text-dark-600" />
+        <ChevronLeft size={20} className="text-gray-600" />
       </button>
 
       {pages.map((page, index) => (
         <div key={index}>
           {page === '...' ? (
-            <span className="px-3 py-2 text-dark-400">...</span>
+            <span className="px-3 py-2 text-gray-400">...</span>
           ) : (
             <button
               onClick={() => onPageChange(page as number)}
               className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200 ${
                 currentPage === page
                   ? 'btn-primary'
-                  : 'btn-secondary hover:border-primary-300'
+                  : 'btn-secondary hover:border-sky-300'
               }`}
             >
               {page}
@@ -74,9 +74,9 @@ const Pagination: React.FC<PaginationProps> = ({
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="p-2 rounded-lg border border-dark-200 hover:bg-primary-50 hover:border-primary-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200"
+        className="p-2 rounded-lg border border-gray-200 hover:bg-sky-50 hover:border-sky-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200"
       >
-        <ChevronRight size={20} className="text-dark-600" />
+        <ChevronRight size={20} className="text-gray-600" />
       </button>
     </div>
   );

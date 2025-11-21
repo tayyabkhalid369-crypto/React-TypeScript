@@ -11,7 +11,7 @@ const GenderFilter: React.FC<GenderFilterProps> = ({
 }) => {
   return (
     <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-      <span className="font-semibold text-dark-700 text-sm">Filter by Gender:</span>
+      <span className="font-semibold text-gray-700 text-sm">Filter by Gender:</span>
       <div className="flex gap-2">
         {[
           { value: null, label: 'All Users', icon: '👥' },
@@ -23,7 +23,7 @@ const GenderFilter: React.FC<GenderFilterProps> = ({
             onClick={() => onFilterChange(filter.value as string | null)}
             className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 text-sm ${
               selectedGender === filter.value
-                ? 'bg-primary-600 text-white shadow-lg shadow-primary-200 scale-105'
+                ? 'btn-primary shadow-lg shadow-sky-200 scale-105'
                 : 'btn-secondary'
             }`}
           >

@@ -26,7 +26,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
   return (
     <div className="relative group">
-      <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-primary-500 pointer-events-none" size={20} />
+      <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-sky-500 pointer-events-none" size={20} />
       <input
         type="text"
         value={query}
@@ -37,7 +37,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       {query && (
         <button
           onClick={handleClear}
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-dark-400 hover:text-dark-600 transition-colors"
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
         >
           <X size={18} />
         </button>
